@@ -1,0 +1,34 @@
+# Use root/example as user/password credentials
+
+services:
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    # (this is just an example, not intended to be a production configuration)
+    ports:
+      - 3306:3306
+  db1:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    # (this is just an example, not intended to be a production configuration)
+    ports:
+      - 3307:3306
+  db2:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: testdb
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

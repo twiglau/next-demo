@@ -1,0 +1,15 @@
+{
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\s*\\([\\s\\S]*?\\)", "[\"'`]([^\"'`]*?)[\"'`]"],
+    ["cn\\s*\\([\\s\\S]*?\\)", "[\"'`]([^\"'`]*?)[\"'`]"],
+    ["(?:variant|size|variant):\\s*\\{[^}]*\\}", "[\"'`]([^\"'`]*?)[\"'`]"]
+  ],
+  "editor.guides.bracketPairs": "active",
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "package.json": "package-lock.json, pnpm*, .editorconfig,.gitattributes,.gitignore,.npmrc,tsconfig.json,*.json",
+    ".env": ".env*",
+    "next.config.ts": "*.config.ts,*.config.js,*.config.mjs",
+    "README.md": "README*,*.info.md"
+  },
+}
