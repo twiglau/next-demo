@@ -8,6 +8,7 @@ import GitlabProvider from "next-auth/providers/gitlab";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
 declare module "next-auth" {
+  // 增加 session.user.id
   interface Session extends DefaultSession {
     user: {
       id: string;
@@ -19,6 +20,7 @@ const authOption: AuthOptions = {
   adapter: DrizzleAdapter(db),
   callbacks: {
     async session(params) {
+      // 回调成功，添加
       const { session, user } = params;
       if (session.user && user) {
         session.user.id = user.id;
