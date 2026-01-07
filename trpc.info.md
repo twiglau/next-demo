@@ -1,8 +1,9 @@
-# TRPC
+# TRPC - 如何做到全栈 typesafe
 
 ## 介绍
 
-tRPC 是一个类型安全的 API 框架，它可以帮助我们构建类型安全的 API。
+- tRPC 是一个类型安全的 API 框架，它可以帮助我们构建类型安全的 API。
+- RPC（Remote Procedure Call，远程过程调用）
 
 ## router
 
