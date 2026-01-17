@@ -1,5 +1,6 @@
 import { getServerSession } from "@/server/auth";
 import { initTRPC, TRPCError } from "@trpc/server";
+import { createCallerFactory } from "@trpc/server/unstable-core-do-not-import";
 
 export async function createTRPCContext() {
   const session = await getServerSession();
@@ -18,8 +19,8 @@ const t = initTRPC.context<typeof createTRPCContext>().create();
 const { router, procedure } = t;
 
 const middleware = t.middleware(async ({ ctx, next }) => {
+  console.log("middleware ctx:", ctx.session);
   const result = await next();
-
   return result;
 });
 
@@ -33,3 +34,5 @@ export const testRouter = router({
     };
   }),
 });
+
+export const serverCaller = createCallerFactory()(testRouter);

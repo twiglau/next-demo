@@ -1,7 +1,7 @@
 
 
 
-export default function AppPage() {
+export default async function AppPage() {
     return (
         <div>
             Dashboard Page
