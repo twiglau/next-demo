@@ -67,6 +67,44 @@ const FileItem: React.FC<FileItemProps> = (props) => {
     )
 }
 
+const LocalFileItem = (option: { file: File | Blob; children?: PreviewChildren}) => {
+    const { file, children } = option;
+    const isImage = file.type.startsWith('image');
+    const url = React.useMemo(() => {
+        if(isImage) {
+            return URL.createObjectURL(file);
+        }
+        return null;
+
+    }, [file, isImage]);
+    return (
+        <FileItem 
+        url={url} 
+        name={file instanceof File ? file.name : 'file'} 
+        isImage={isImage}
+        >
+            {children}
+        </FileItem>
+    )
+}
+
+
+const RemoteFileItem = (option: {
+    contentType: string;
+    id: string;
+    name: string;
+    children?:PreviewChildren
+}) => {
+    const { contentType, id, name, children } = option;
+    const isImage = contentType.startsWith('image');
+    const imageUrl = `/image/${id}`;
+    return (
+        <FileItem url={imageUrl} name={name} isImage={isImage}>
+            {children}
+        </FileItem>
+    )
+};
+
 const RemoteFileItemWithTags = (option: {
     contentType: string;
     id: string;
@@ -84,4 +122,4 @@ const RemoteFileItemWithTags = (option: {
     )
 }
 
-export { RemoteFileItemWithTags }
+export { RemoteFileItemWithTags, RemoteFileItem, LocalFileItem }
