@@ -2,7 +2,15 @@ import React from "react";
 import ImageReview from '../ui/ImageReview'
 import Image from "next/image";
 
-// TODO: 这个  React.Dispatch<React.SetStateAction<boolean>> 是什么意思？
+
+/**
+ * 这个  React.Dispatch<React.SetStateAction<boolean>> 是什么意思？
+ * 
+ * 1. 它是 useState 返回的那个“设置状态的函数”（Setter Function）的完整类型。
+ * 2. 实际应用场景（为什么需要手动写它？）
+ * > 通常在定义 Props 时，如果你想把父组件的 setIsOpen 传给子组件，
+ * > 由于 TypeScript 无法自动推断 Props 类型，你就需要显式定义它：
+ */
 type PreviewChildren = (options: {
     setPreview: React.Dispatch<React.SetStateAction<boolean>>;
 }) => React.ReactNode;
