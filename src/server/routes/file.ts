@@ -10,8 +10,21 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuidv4 } from "uuid";
 import { files } from "../db/schema";
+import { and, asc, desc, eq, isNull, sql } from "drizzle-orm";
+import { filesCanOrderByColumn } from "../db/validate-schema";
+
+const filesOrderByColumnSchema = z
+  .object({
+    field: filesCanOrderByColumn.keyof(),
+    order: z.enum(["asc", "desc"]),
+  })
+  .optional();
+
+//TODO:不知道什么意思，先这样写
+export type FilesOrderByColumn = z.infer<typeof filesOrderByColumnSchema>;
 
 const fileRoutes = router({
+  // s3 生成上传url
   createPresignedUrl: protectedProcedure
     .input(
       z.object({
@@ -58,6 +71,7 @@ const fileRoutes = router({
       });
       return { url, method: "PUT" as const };
     }),
+  // 保存图片到数据库
   saveFile: protectedProcedure
     .input(
       z.object({
@@ -85,6 +99,89 @@ const fileRoutes = router({
         .returning();
 
       return photo[0];
+    }),
+  // 查询图片列表
+  listFiles: protectedProcedure
+    .input(
+      z.object({
+        appId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { session } = ctx;
+      const result = await db.query.files.findMany({
+        orderBy: [desc(files.createdAt)],
+        where: (files, { eq }) =>
+          and(
+            eq(files.userId, session?.user?.id),
+            eq(files.appId, input.appId),
+          ),
+      });
+      return result;
+    }),
+  // 下拉加载更多（列表）
+  infinityQueryFiles: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.object({ id: z.string(), createAt: z.string() }).optional(),
+        limit: z.number().default(10),
+        orderBy: filesOrderByColumnSchema,
+        appId: z.string(),
+      }),
+    )
+    .query(async (res) => {
+      const {
+        cursor,
+        limit,
+        orderBy = { field: "createdAt", order: "desc" },
+      } = res.input;
+
+      const appFilter = eq(files.appId, res.input.appId);
+      const deletedFilter = isNull(files.deleteAt);
+      const userFilter = eq(files.userId, res.ctx.session.user.id);
+
+      const statement = db
+        .select()
+        .from(files)
+        .limit(limit)
+        .where(
+          cursor
+            ? and(
+                sql`("files"."create_at", "files"."id") > (${new Date(cursor.createAt).toISOString()}, ${cursor.id})`,
+                deletedFilter,
+                userFilter,
+                appFilter,
+              )
+            : and(deletedFilter, userFilter, appFilter),
+        );
+
+      statement.orderBy(
+        orderBy.order === "asc"
+          ? asc(files[orderBy.field])
+          : desc(files[orderBy.field]),
+      );
+
+      const result = await statement;
+      return {
+        items: result,
+        nextCursor: result.length
+          ? {
+              id: result[result.length - 1].id,
+              createAt: result[result.length - 1].createdAt!,
+            }
+          : null,
+      };
+    }),
+  // 删除图片
+  deleteFile: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      return db
+        .update(files)
+        .set({
+          deleteAt: new Date(),
+        })
+        .where(eq(files.id, input));
     }),
 });
 
