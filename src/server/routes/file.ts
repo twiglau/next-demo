@@ -137,7 +137,7 @@ const fileRoutes = router({
       } = res.input;
 
       const appFilter = eq(files.appId, res.input.appId);
-      const deletedFilter = isNull(files.deleteAt);
+      const deletedFilter = isNull(files.deletedAt);
       const userFilter = eq(files.userId, res.ctx.session.user.id);
 
       const statement = db
@@ -179,7 +179,7 @@ const fileRoutes = router({
       return db
         .update(files)
         .set({
-          deleteAt: new Date(),
+          deletedAt: new Date(),
         })
         .where(eq(files.id, input));
     }),

@@ -12,6 +12,7 @@ export default function CreateApp() {
         'use server';
         const name = formData.get('name') as string;
         const description = formData.get('description') as string;
+        // schema 来做表单 验证
         const input = createAppSchema.pick({name: true, description: true}).safeParse({name, description});
         if (!input.success) {
             throw input.error;

@@ -1,5 +1,7 @@
+'use client';
+
 import { Dialog } from "@/components/ui/Dialog";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 
 type Props = {

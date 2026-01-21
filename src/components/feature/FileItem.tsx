@@ -114,6 +114,7 @@ const RemoteFileItemWithTags = (option: {
 }) => {
     const { contentType, id, name, tags, children } = option;
     const isImage = contentType.startsWith('image');
+    // 通过图片的id获取图片 image/[id] 路由
     const imageUrl = `/image/${id}`;
     return (
         <FileItem url={imageUrl} name={name} isImage={isImage}>

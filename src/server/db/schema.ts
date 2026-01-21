@@ -18,8 +18,8 @@ export const apps = pgTable("apps", {
   id: uuid("id").notNull().primaryKey(),
   name: varchar("name", { length: 100 }).notNull(),
   description: varchar("description", { length: 500 }),
-  deleteAt: timestamp("deleted_at", { mode: "date" }),
-  createAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+  deletedAt: timestamp("deleted_at", { mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
   userId: text("user_id").notNull(),
   storageId: integer("storage_id"),
 });
@@ -64,7 +64,7 @@ export const accounts = pgTable(
         columns: [account.provider, account.providerAccountId],
       }),
     },
-  ]
+  ],
 );
 
 export const sessions = pgTable("session", {
@@ -88,7 +88,7 @@ export const verificationTokens = pgTable(
         columns: [verificationToken.identifier, verificationToken.token],
       }),
     },
-  ]
+  ],
 );
 
 export const authenticators = pgTable(
@@ -111,7 +111,7 @@ export const authenticators = pgTable(
         columns: [authenticator.userId, authenticator.credentialID],
       }),
     },
-  ]
+  ],
 );
 
 export const files = pgTable(
@@ -121,14 +121,14 @@ export const files = pgTable(
     name: varchar("name", { length: 100 }).notNull(),
     type: varchar("type", { length: 100 }).notNull(),
     createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
-    deleteAt: timestamp("deleted_at", { mode: "date" }),
+    deletedAt: timestamp("deleted_at", { mode: "date" }),
     path: varchar("path", { length: 1024 }).notNull(),
     url: varchar("url", { length: 1024 }).notNull(),
     userId: text("user_id").notNull(),
     contentType: varchar("content_type", { length: 100 }).notNull(),
     appId: uuid(),
   },
-  (table) => [index("cursor_idx").on(table.id, table.createdAt)]
+  (table) => [index("cursor_idx").on(table.id, table.createdAt)],
 );
 
 export const filesRelations = relations(files, ({ one, many }) => ({
@@ -164,8 +164,8 @@ export const storageConfiguration = pgTable("storageConfiguration", {
   configuration: json("configuration")
     .$type<S3StorageConfiguration>()
     .notNull(),
-  createAt: timestamp("create_at", { mode: "date" }).defaultNow(),
-  deleteAt: timestamp("deleted_at", { mode: "date" }),
+  createdAt: timestamp("create_at", { mode: "date" }).defaultNow(),
+  deletedAt: timestamp("deleted_at", { mode: "date" }),
 });
 
 export const storageConfigurationRelation = relations(
@@ -175,7 +175,7 @@ export const storageConfigurationRelation = relations(
       fields: [storageConfiguration.userId],
       references: [users.id],
     }),
-  })
+  }),
 );
 
 export const apiKeys = pgTable("apiKeys", {
@@ -184,7 +184,7 @@ export const apiKeys = pgTable("apiKeys", {
   name: varchar("name", { length: 255 }).notNull(),
   clientId: varchar("client_id", { length: 100 }).notNull().unique(),
   appId: uuid("appId").notNull(),
-  createAt: timestamp("create_at", { mode: "date" }).defaultNow(),
+  createdAt: timestamp("create_at", { mode: "date" }).defaultNow(),
   deletedAt: timestamp("deleted_at", { mode: "date" }),
 });
 
@@ -207,7 +207,7 @@ export const tags = pgTable(
   (table) => [
     index("tags_user_idx").on(table.userId),
     index("tags_name_idx").on(table.name),
-  ]
+  ],
 );
 
 export const tagsRelations = relations(tags, ({ many, one }) => ({
@@ -233,7 +233,7 @@ export const files_tags = pgTable(
     { pk: primaryKey({ columns: [table.fileId, table.tagId] }) },
     index("files_tags_file_idx").on(table.fileId),
     index("files_tags_tag_idx").on(table.tagId),
-  ]
+  ],
 );
 
 export const files_tagsRelations = relations(files_tags, ({ one }) => ({

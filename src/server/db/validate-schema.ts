@@ -13,7 +13,7 @@ export const fileSchema = createSelectSchema(files);
 // 只需要校验，挑选出的两个字段
 export const filesCanOrderByColumn = fileSchema.pick({
   createdAt: true,
-  deleteAt: true,
+  deletedAt: true,
 });
 
 export const createAppSchema = createInsertSchema(apps, {

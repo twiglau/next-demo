@@ -45,7 +45,7 @@ nav }: Readonly<{
                             {session?.user?.name}
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <div className='absolute h-full left-1/2 -translate-x-1/2 flex justify-center items-center'>
+                    <div className='absolute top-0 h-full left-1/2 -translate-x-1/2 flex justify-center items-center'>
                         {nav}
                     </div>
                 </div>
