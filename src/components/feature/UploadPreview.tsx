@@ -2,7 +2,7 @@ import Uppy from '@uppy/core';
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '../ui/Button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/Dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../ui/Dialog';
 import { LocalFileItem } from './FileItem';
 import { useUppyState } from '@/hooks/use-uppy-state';
 

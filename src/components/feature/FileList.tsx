@@ -7,8 +7,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "../ui/Button";
 import { useUppyState } from "@/hooks/use-uppy-state";
 import React from "react";
-import Image from "next/image";
-import { RemoteFileItemWithTags } from "./FileItem";
+import { RemoteFileItemWithTags, LocalFileItem } from "./FileItem";
 import { CopyUrlAction, DeleteFileAction, PreviewAction } from "./FileItemAction";
 
 
@@ -47,6 +46,7 @@ const FileList: React.FC<FileListProps> = (props) => {
     // TODO: 这个 utils 有什么用？
     const utils = trpcClientReact.useUtils();
     const uppyFiles = useUppyState(uppy, (s) => s.files);
+    // 乐观更新
     const [uploadingFilesIds, setUploadingFilesIds] = React.useState<string[]>([]);
     const bottomRef = React.useRef<HTMLDivElement|null>(null);
 
@@ -189,26 +189,7 @@ const FileList: React.FC<FileListProps> = (props) => {
                 {uploadingFilesIds.length > 0 && uploadingFilesIds.map((fileId) => {
                     const file = uppyFiles[fileId];
                     if (!file || !(file.data instanceof Blob)) return null;
-                    const isImage = file.data.type.startsWith('image');
-                    const url = URL.createObjectURL(file.data);
-                    return (
-                        <div
-                         key={fileId}
-                         className="flex justify-center items-center border border-red-500"
-                        >
-                            { isImage ? (
-                                <img src={url} alt="file" />
-                            ):(
-                                <Image 
-                                width={100}
-                                height={100}
-                                className="w-full"
-                                src="/file.png"
-                                alt="unknow file type"
-                                />
-                            ) }
-                        </div>
-                    )
+                    return <LocalFileItem key={fileId} file={file.data} />
                 })}
                 {fileListElements}
             </div>

@@ -123,7 +123,7 @@ const fileRoutes = router({
   infinityQueryFiles: protectedProcedure
     .input(
       z.object({
-        cursor: z.object({ id: z.string(), createAt: z.string() }).optional(),
+        cursor: z.object({ id: z.string(), createdAt: z.string() }).optional(),
         limit: z.number().default(10),
         orderBy: filesOrderByColumnSchema,
         appId: z.string(),
@@ -147,7 +147,7 @@ const fileRoutes = router({
         .where(
           cursor
             ? and(
-                sql`("files"."create_at", "files"."id") > (${new Date(cursor.createAt).toISOString()}, ${cursor.id})`,
+                sql`("files"."created_at", "files"."id") > (${new Date(cursor.createdAt).toISOString()}, ${cursor.id})`,
                 deletedFilter,
                 userFilter,
                 appFilter,
@@ -167,7 +167,7 @@ const fileRoutes = router({
         nextCursor: result.length
           ? {
               id: result[result.length - 1].id,
-              createAt: result[result.length - 1].createdAt!,
+              createdAt: result[result.length - 1].createdAt!,
             }
           : null,
       };
