@@ -1,14 +1,18 @@
 import Uppy from '@uppy/core'
 import React from 'react';
-import { Button } from '../ui/Button';
+import { Button, buttonVariants } from '../ui/Button';
 import { Plus } from 'lucide-react';
+import { VariantProps } from 'class-variance-authority';
 
 type UploadButtonProps = {
     uppy: Uppy;
-};
+} & React.ComponentProps<'button'> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+  };
 
 const UploadButton: React.FC<UploadButtonProps> = (props) => {
-    const { uppy } = props;
+    const { uppy, ...otherProps } = props;
     const inputRef = React.useRef<HTMLInputElement>(null);
 
     return (
@@ -29,7 +33,8 @@ const UploadButton: React.FC<UploadButtonProps> = (props) => {
           }}
           />
           <Button
-          variant="ghost"
+          variant="outline"
+          {...otherProps}
           onClick={() => {
             if(inputRef.current) inputRef.current.click();
           }}

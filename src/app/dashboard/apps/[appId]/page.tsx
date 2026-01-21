@@ -101,7 +101,7 @@ export default function AppPage(props: AppPageProps) {
                        Created At { orderBy.order === 'desc' ? <MoveUp />: <MoveDown />}
                     </Button>
                     <div className="flex items-center gap-2">
-                        <UploadButton uppy={uppy} />
+                        <UploadButton variant='outline'  uppy={uppy} />
                         <Button asChild>
                             <Link href={`/dashboard/apps/new`}>New App</Link>
                         </Button>
@@ -117,7 +117,7 @@ export default function AppPage(props: AppPageProps) {
                     <Tabs defaultValue="all">
                         <TabsList>
                             {[['all','全部'],['people','人物'],['area','地点'],['password','事务']].map(item => (
-                                <TabsTrigger value={item[0]}>{item[1]}</TabsTrigger>
+                                <TabsTrigger key={item[0]} value={item[0]}>{item[1]}</TabsTrigger>
                             ))}
                         </TabsList>
                         <TabsContent value="all">
