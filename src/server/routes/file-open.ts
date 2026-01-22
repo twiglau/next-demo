@@ -38,10 +38,8 @@ const fileOpenRoutes = router({
       const date = new Date();
       const isoString = date.toISOString();
       const dateString = isoString.split("T")[0];
-      const app = await db.query.apps.findFirst({
-        where: (apps, { eq }) => eq(apps.id, input.appId),
-        with: { storage: true },
-      });
+
+      const app = ctx.app;
       if (!app || !app.storage) {
         throw new TRPCError({ code: "BAD_REQUEST" });
       }
