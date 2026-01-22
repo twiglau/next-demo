@@ -1,9 +1,11 @@
-import { desc } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { db } from "../db/db";
 import { protectedProcedure, router } from "../trpc-middlewares/trpc";
 import { apps } from "../db/schema";
 import { createAppSchema } from "../db/validate-schema";
 import { v4 as uuidV4 } from "uuid";
+import z from "zod";
+import { TRPCError } from "@trpc/server";
 
 export const appsRouter = router({
   createApp: protectedProcedure
@@ -37,4 +39,35 @@ export const appsRouter = router({
 
     return result;
   }),
+
+  changeStorage: protectedProcedure
+    .input(
+      z.object({
+        appId: z.string(),
+        storageId: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const storage = await db.query.storageConfiguration.findFirst({
+        where: (config, { eq }) => {
+          return eq(config.id, input.storageId);
+        },
+      });
+
+      if (storage?.userId !== ctx.session.user.id) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      const result = await db
+        .update(apps)
+        .set({
+          storageId: input.storageId,
+        })
+        .where(
+          and(eq(apps.id, input.appId), eq(apps.userId, ctx.session.user.id)),
+        )
+        .returning();
+
+      return result[0];
+    }),
 });

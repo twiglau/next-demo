@@ -164,7 +164,7 @@ export const storageConfiguration = pgTable("storageConfiguration", {
   configuration: json("configuration")
     .$type<S3StorageConfiguration>()
     .notNull(),
-  createdAt: timestamp("create_at", { mode: "date" }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
   deletedAt: timestamp("deleted_at", { mode: "date" }),
 });
 
@@ -183,8 +183,8 @@ export const apiKeys = pgTable("apiKeys", {
   key: varchar("key", { length: 100 }).notNull().unique(),
   name: varchar("name", { length: 255 }).notNull(),
   clientId: varchar("client_id", { length: 100 }).notNull().unique(),
-  appId: uuid("appId").notNull(),
-  createdAt: timestamp("create_at", { mode: "date" }).defaultNow(),
+  appId: uuid("app_id").notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
   deletedAt: timestamp("deleted_at", { mode: "date" }),
 });
 
