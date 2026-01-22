@@ -1,5 +1,7 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { getServerSession } from "@/server/auth";
+import { headers } from "next/headers";
+import { db } from "../db/db";
 
 const t = initTRPC.create();
 const { router, procedure } = t;
@@ -36,7 +38,35 @@ const protectedProcedure = procedure
   });
 
 const withAppProcedure = withLoggerProcedure.use(async ({ ctx, next }) => {
-  return next();
+  const header = await headers();
+  const apiKey = header.get("api-key");
+  const signedToken = header.get("signed-token");
+  if (apiKey) {
+    const apiKeyAndAppUser = await db.query.apiKeys.findFirst({
+      where: (apiKeys, { eq, and, isNull }) =>
+        and(eq(apiKeys.key, apiKey), isNull(apiKeys.deletedAt)),
+      with: {
+        app: {
+          with: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    if (apiKeyAndAppUser == null) {
+      throw new TRPCError({ code: "NOT_FOUND" });
+    }
+
+    return next({
+      ctx: {
+        app: apiKeyAndAppUser.app,
+        user: apiKeyAndAppUser.app.user,
+      },
+    });
+  }
+
+  throw new TRPCError({ code: "FORBIDDEN" });
 });
 
 export { router, protectedProcedure, withAppProcedure };

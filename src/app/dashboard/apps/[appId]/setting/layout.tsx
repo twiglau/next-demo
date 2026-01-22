@@ -12,7 +12,7 @@ type Props = {
 
 export default function Layout(props: Props) {
     const { params, children } = props;
-    const { appId } =React.use(params);
+    const { appId } = React.use(params);
     const path = usePathname();
 
     const links:{name:string, path:string}[] = [
