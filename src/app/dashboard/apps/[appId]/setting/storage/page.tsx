@@ -36,7 +36,7 @@ export default function StoragePage(props: Props) {
     const currentApp = apps?.find((app) => app.id === appId);
 
     return (
-        <div className='pt-10'>
+        <div className='pt-10 pl-4'>
             <div className='flex justify-between items-center'>
                 <h1 className='text-3xl mb-6'>Storage</h1>
                 <Link href={`/dashboard/apps/${appId}/setting/storage/new`}>
