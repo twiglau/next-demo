@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
 export default function Layout(props: Props) {
     const { params, children } = props;
     const { appId } =React.use(params);
+    const path = usePathname();
 
     const links:{name:string, path:string}[] = [
        {name: 'Storage', path: `/dashboard/apps/${appId}/setting/storage`},
@@ -25,13 +27,18 @@ export default function Layout(props: Props) {
                 { 
                     links.map(item => (
                         <Button
+                        asChild={path !== item.path}
+                        disabled={path === item.path}
                         key={item.name}
                         size="lg"
-                        variant="ghost"
+                        variant={path !== item.path ? 'link':'ghost'}
                         >
-                            <Link href={item.path}>{item.name}</Link>
+                            {
+                                path !== item.path ? 
+                                    <Link href={item.path}>{item.name}</Link> : 
+                                    item.name
+                            }
                         </Button>
-
                     ))
                 }
             </div>

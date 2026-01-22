@@ -16,7 +16,15 @@ export default function ApiKeyPage(props: Props) {
     const newApiKeyName = React.useRef('');
     const utils = trpcClientReact.useUtils();
     const { mutate } = trpcClientReact.apiKeys.createApiKey.useMutation({
-        onSuccess: (data) => {}
+        onSuccess: (data) => {
+            utils.apiKeys.listApiKeys.setData({appId}, (prev) => {
+                newApiKeyName.current = '';
+                if(!prev || !data) {
+                    return prev;
+                }
+                return [data, ...prev];
+            })
+        }
     })
     const { data: apiKeys } = trpcClientReact.apiKeys.listApiKeys.useQuery({
         appId
@@ -27,7 +35,7 @@ export default function ApiKeyPage(props: Props) {
             <div className='flex justify-between items-center'>
                 <h1 className='text-3xl mb-6'>Api Keys</h1>
                 <Popover>
-                    <PopoverTrigger>
+                    <PopoverTrigger asChild>
                         <Button> <Plus /> </Button>
                     </PopoverTrigger>
                     <PopoverContent>
