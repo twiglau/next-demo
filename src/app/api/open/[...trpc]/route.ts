@@ -14,7 +14,7 @@ const handler = async (request: NextRequest) => {
   res.headers.append("Access-Control-Allow-Methods", "*");
   res.headers.append(
     "Access-Control-Allow-Headers",
-    "api-key, content-type, authorization",
+    "api-key, signed-token, content-type, authorization",
   );
 
   return res;
@@ -25,7 +25,8 @@ const OPTIONS = () => {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "*",
-      "Access-Control-Allow-Headers": "api-key, content-type, authorization",
+      "Access-Control-Allow-Headers":
+        "api-key, signed-token, content-type, authorization",
     },
   });
 

@@ -42,6 +42,7 @@ const withAppProcedure = withLoggerProcedure.use(async ({ ctx, next }) => {
   const header = await headers();
   const apiKey = header.get("api-key");
   const signedToken = header.get("signed-token");
+
   if (apiKey) {
     const apiKeyAndAppUser = await db.query.apiKeys.findFirst({
       where: (apiKeys, { eq, and, isNull }) =>
@@ -82,7 +83,6 @@ const withAppProcedure = withLoggerProcedure.use(async ({ ctx, next }) => {
         app: {
           with: {
             user: true,
-            storage: true,
           },
         },
       },

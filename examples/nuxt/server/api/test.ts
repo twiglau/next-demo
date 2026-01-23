@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 const apiKey = "faae7d14-273b-460e-9e2c-0c8b490903cf";
-const clientId = "3d998ae6-832f-4de9-9490-16c34c3c90ed";
+const clientId = "a2d3283f-f39f-448e-a530-9ebf3d83c987";
 
 export default defineEventHandler(async (event) => {
   const token = jwt.sign(
