@@ -13,6 +13,7 @@ export const createApiClient = (options) => {
                 url: "http://localhost:3000/api/open",
                 headers: {
                     "api-key": options.apiKey,
+                    "signed-token": options.signedToken,
                 },
             }),
         ],

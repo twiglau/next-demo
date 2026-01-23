@@ -43,6 +43,11 @@ export default function StorageNewPage(props: Props) {
                     <span className='text-red-500'>{errors.bucket?.message}</span>
                 </div>
                 <div>
+                    <Label>Region</Label>
+                    <Input {...register('region', { required: 'Region is required'})} />
+                    <span className='text-red-500'>{errors.region?.message}</span>
+                </div>
+                <div>
                     <Label>AccessKeyId</Label>
                     <Input {...register('accessKeyId', { required: 'AccessKeyId is required'})} />
                     <span className='text-red-500'>{errors.accessKeyId?.message}</span>

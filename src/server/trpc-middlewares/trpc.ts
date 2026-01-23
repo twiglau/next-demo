@@ -2,6 +2,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { getServerSession } from "@/server/auth";
 import { headers } from "next/headers";
 import { db } from "../db/db";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const t = initTRPC.create();
 const { router, procedure } = t;
@@ -57,6 +58,47 @@ const withAppProcedure = withLoggerProcedure.use(async ({ ctx, next }) => {
 
     if (apiKeyAndAppUser == null) {
       throw new TRPCError({ code: "NOT_FOUND" });
+    }
+
+    return next({
+      ctx: {
+        app: apiKeyAndAppUser.app,
+        user: apiKeyAndAppUser.app.user,
+      },
+    });
+  } else if (signedToken) {
+    const payload = jwt.decode(signedToken) as JwtPayload;
+    if (!payload.clientId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "ClientId not found",
+      });
+    }
+
+    const apiKeyAndAppUser = await db.query.apiKeys.findFirst({
+      where: (apiKeys, { eq, and, isNull }) =>
+        and(eq(apiKeys.clientId, payload.clientId), isNull(apiKeys.deletedAt)),
+      with: {
+        app: {
+          with: {
+            user: true,
+            storage: true,
+          },
+        },
+      },
+    });
+
+    if (apiKeyAndAppUser == null) {
+      throw new TRPCError({ code: "NOT_FOUND" });
+    }
+
+    try {
+      jwt.verify(signedToken, apiKeyAndAppUser.key);
+    } catch (error) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Invalid signed token",
+      });
     }
 
     return next({

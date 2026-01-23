@@ -12,7 +12,10 @@ const handler = async (request: NextRequest) => {
 
   res.headers.append("Access-Control-Allow-Origin", "*");
   res.headers.append("Access-Control-Allow-Methods", "*");
-  res.headers.append("Access-Control-Allow-Headers", "api-key");
+  res.headers.append(
+    "Access-Control-Allow-Headers",
+    "api-key, content-type, authorization",
+  );
 
   return res;
 };
@@ -22,7 +25,7 @@ const OPTIONS = () => {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "*",
-      "Access-Control-Allow-Headers": "api-key",
+      "Access-Control-Allow-Headers": "api-key, content-type, authorization",
     },
   });
 

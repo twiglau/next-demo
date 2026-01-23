@@ -104,7 +104,8 @@ export declare const apiClient: import("@trpc/client").TRPCClient<import("@trpc/
     }>>;
 }>>>;
 export declare const createApiClient: (options: {
-    apiKey: string;
+    apiKey?: string;
+    signedToken?: string;
 }) => import("@trpc/client").TRPCClient<import("@trpc/server").TRPCBuiltRouter<{
     ctx: object;
     meta: object;

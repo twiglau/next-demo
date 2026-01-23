@@ -1,10 +1,24 @@
-import { createApiClient } from "@image-sass/api";
+import jwt from "jsonwebtoken";
 
 const apiKey = "faae7d14-273b-460e-9e2c-0c8b490903cf";
+const clientId = "3d998ae6-832f-4de9-9490-16c34c3c90ed";
 
 export default defineEventHandler(async (event) => {
-  const client = createApiClient({ apiKey });
+  const token = jwt.sign(
+    {
+      filename: "test.jpg",
+      contentType: "image/jpeg",
+      size: 1024,
+      clientId,
+    },
+    apiKey,
+    { expiresIn: "1d" },
+  );
 
+  return token;
+});
+
+async function test() {
   const url = "http://localhost:3000/api/open/file.createPresignedUrl?batch=1";
 
   const payload = {
@@ -24,14 +38,4 @@ export default defineEventHandler(async (event) => {
     },
     body: JSON.stringify(payload),
   });
-
-  const response = await client.file.createPresignedUrl.mutate({
-    filename: "test.jpg",
-    contentType: "image/jpeg",
-    size: 1024,
-    appId: "7c696a30-2b74-4f68-8cb2-c40d5eb33866",
-  });
-
-  console.log(response);
-  return response;
-});
+}
