@@ -1,11 +1,27 @@
 <template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+  <div ref="containerRef"></div>
 </template>
 <script setup lang="ts">
 import { createApiClient } from "@image-sass/api";
+import { onMounted, watchEffect, ref } from "vue";
+import { UploadButton } from "@image-sass/upload-button";
+import { render, h } from "preact";
+
+const containerRef = ref();
+
+watchEffect(() => {
+  if (containerRef.value) {
+    render(
+      h(UploadButton, {
+        onClick: () => {
+          console.log("click");
+        },
+        children: "Upload",
+      }),
+      containerRef.value,
+    );
+  }
+});
 
 onMounted(async () => {
   const tokenResp = await $fetch("/api/test");
