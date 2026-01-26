@@ -12,13 +12,16 @@
     "preview": "vite preview"
   },
   "files": [
-    "dist"
+    "dist",
+    "package.json"
   ],
   "dependencies": {
-    "preact": "^10.27.2"
+    "preact": "^10.27.2",
+    "@uppy/core": "^5.0.2"
   },
   "peerDependencies": {
-    "preact": "^10.27.2"
+    "preact": "^10.27.2",
+    "@uppy/core": "^5.0.2"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",

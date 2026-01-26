@@ -1,45 +1,36 @@
 <template>
   <div>
-    <VueUploadButton @file-choosed="handleFileChoosed">
+    <VueUploadButton :uploader="uploader" @file-uploaded="onFileUploaded">
       上传图片
     </VueUploadButton>
+    <img :src="imageUrl" />
   </div>
 </template>
 <script setup lang="ts">
+import { ref } from "vue";
 import { createApiClient } from "@image-sass/api";
-import { UploadButton } from "@image-sass/upload-button";
+import { ButtonWithUploader } from "@image-sass/upload-button";
 import { connect } from "@image-sass/preact-vue-connect";
 import { createUploader } from "@image-sass/uploader";
 
-const VueUploadButton = connect(UploadButton);
+const VueUploadButton = connect(ButtonWithUploader);
+
+const imageUrl = ref("");
 
 const uploader = createUploader({
   async getUploadParameters(file) {
     const tokenResp = await $fetch("/api/test");
-    console.log("tokenResp", tokenResp);
+
     const client = createApiClient({ signedToken: tokenResp as any });
-    const response = await client.file.createPresignedUrl.mutate({
-      filename: file.name || "test.jpg",
-      contentType: file.type || "image/jpeg",
+    return client.file.createPresignedUrl.mutate({
+      filename: file.data instanceof File ? file.data.name : "",
+      contentType: file.data instanceof File ? file.data.type || "" : "",
       size: file.size || 1024,
     });
-
-    return {
-      method: "PUT",
-      url: response.url,
-      fields: {},
-      headers: (response as any).headers || {},
-    };
   },
 });
 
-const handleFileChoosed = (files: File[]) => {
-  uploader.addFiles(
-    files.map((file) => ({
-      name: file.name,
-      data: file,
-    })),
-  );
-  uploader.upload();
-};
+function onFileUploaded(url: string) {
+  imageUrl.value = url;
+}
 </script>

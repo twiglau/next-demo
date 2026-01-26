@@ -1,16 +1,17 @@
 import { type HTMLAttributes } from "preact";
-import { useRef } from "preact/hooks";
+import { useRef, type MutableRef } from "preact/hooks";
 
 type CommonPreactComponentProps = {
     setChildrenContainer?: (ele: HTMLElement | null) => void;
 }
 
-type Props = {
+export type UploaderButtonProps = {
     onClick?: (e: any) => void;
-    onFileChoosed?: (files: File | File[]) => void;
+    onFileChoosed?: (files: File[]) => void;
+    inputRef?: MutableRef<HTMLInputElement|null>
 } & HTMLAttributes<HTMLButtonElement> & CommonPreactComponentProps
 
-export function UploadButton(props: Props) {
+export function UploadButton(props: UploaderButtonProps) {
     const inputRef = useRef<HTMLInputElement|null>(null);
 
     const handleClick = (e: any) => {
@@ -27,7 +28,13 @@ export function UploadButton(props: Props) {
             <input 
             // 永远不会被tab键选中
             tabIndex={-1} 
-            ref={inputRef}
+            ref={e => {
+                inputRef.current = e;
+                const ref = props.inputRef;
+                if (ref) {
+                    ref.current = e;
+                }
+            }}
             onChange={(e) => {
                 const filesFromEvent = (e.target as HTMLInputElement).files;
                 if(filesFromEvent) {

@@ -249,6 +249,9 @@ importers:
 
   packages/upload-button:
     dependencies:
+      '@uppy/core':
+        specifier: ^5.0.2
+        version: 5.2.0
       preact:
         specifier: ^10.27.2
         version: 10.28.1

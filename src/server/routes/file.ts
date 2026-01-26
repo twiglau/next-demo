@@ -49,10 +49,17 @@ const fileRoutes = router({
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 
+      const ext = input.filename.includes(".")
+        ? input.filename.split(".").pop()
+        : "";
+      const nameWithoutExt = input.filename.includes(".")
+        ? input.filename.slice(0, input.filename.lastIndexOf("."))
+        : input.filename;
+
       const storage = app.storage;
       const params: PutObjectCommandInput = {
         Bucket: storage.configuration.bucket,
-        Key: `${dateString}/${input.filename}-${uuidv4()}`,
+        Key: `${dateString}/${nameWithoutExt}-${uuidv4()}${ext ? `.${ext}` : ""}`,
         ContentType: input.contentType,
         ContentLength: input.size,
       };
