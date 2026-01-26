@@ -13,6 +13,7 @@ export default defineConfig({
       formats: ["es", "cjs"],
     },
     minify: false,
+    sourcemap: "inline",
     rollupOptions: {
       external: [...Object.keys(pkg.peerDependencies || {}), "preact/hooks"],
     },
