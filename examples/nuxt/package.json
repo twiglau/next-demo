@@ -14,6 +14,7 @@
     "@image-sass/upload-button": "workspace:*",
     "@image-sass/preact-vue-connect": "workspace:*",
     "@image-sass/uploader": "workspace:*",
+    "@image-sass/dropzone": "workspace:*",
     "@trpc/client": "^11.5.1",
     "@types/jsonwebtoken": "^9.0.10",
     "preact": "^10.27.2",
