@@ -16,7 +16,6 @@ export declare const apiClient: import("@trpc/client").TRPCClient<import("@trpc/
                 filename: string;
                 contentType: string;
                 size: number;
-                appId: string;
             };
             output: {
                 url: string;
@@ -29,7 +28,6 @@ export declare const apiClient: import("@trpc/client").TRPCClient<import("@trpc/
                 name: string;
                 path: string;
                 type: string;
-                appId: string;
             };
             output: {
                 id: string;
@@ -123,7 +121,6 @@ export declare const createApiClient: (options: {
                 filename: string;
                 contentType: string;
                 size: number;
-                appId: string;
             };
             output: {
                 url: string;
@@ -136,7 +133,6 @@ export declare const createApiClient: (options: {
                 name: string;
                 path: string;
                 type: string;
-                appId: string;
             };
             output: {
                 id: string;

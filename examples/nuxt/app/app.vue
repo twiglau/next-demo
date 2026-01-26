@@ -1,41 +1,45 @@
 <template>
-  <div ref="containerRef"></div>
+  <div>
+    <VueUploadButton @file-choosed="handleFileChoosed">
+      上传图片
+    </VueUploadButton>
+  </div>
 </template>
 <script setup lang="ts">
 import { createApiClient } from "@image-sass/api";
-import { onMounted, watchEffect, ref } from "vue";
 import { UploadButton } from "@image-sass/upload-button";
-import { render, h } from "preact";
+import { connect } from "@image-sass/preact-vue-connect";
+import { createUploader } from "@image-sass/uploader";
 
-const containerRef = ref();
+const VueUploadButton = connect(UploadButton);
 
-watchEffect(() => {
-  if (containerRef.value) {
-    render(
-      h(UploadButton, {
-        onClick: () => {
-          console.log("click");
-        },
-        children: "Upload",
-      }),
-      containerRef.value,
-    );
-  }
+const uploader = createUploader({
+  async getUploadParameters(file) {
+    const tokenResp = await $fetch("/api/test");
+    console.log("tokenResp", tokenResp);
+    const client = createApiClient({ signedToken: tokenResp as any });
+    const response = await client.file.createPresignedUrl.mutate({
+      filename: file.name || "test.jpg",
+      contentType: file.type || "image/jpeg",
+      size: file.size || 1024,
+    });
+
+    return {
+      method: "PUT",
+      url: response.url,
+      fields: {},
+      headers: (response as any).headers || {},
+    };
+  },
 });
 
-onMounted(async () => {
-  const tokenResp = await $fetch("/api/test");
-  console.log(tokenResp);
-
-  const client = createApiClient({ signedToken: tokenResp });
-
-  const response = await client.file.createPresignedUrl.mutate({
-    filename: "test.jpg",
-    contentType: "image/jpeg",
-    size: 1024,
-    appId: "7c696a30-2b74-4f68-8cb2-c40d5eb33866",
-  });
-
-  console.log(response);
-});
+const handleFileChoosed = (files: File[]) => {
+  uploader.addFiles(
+    files.map((file) => ({
+      name: file.name,
+      data: file,
+    })),
+  );
+  uploader.upload();
+};
 </script>

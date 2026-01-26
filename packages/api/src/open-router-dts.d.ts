@@ -18,7 +18,6 @@ declare const openRouter: _trpc_server.TRPCBuiltRouter<{
                 filename: string;
                 contentType: string;
                 size: number;
-                appId: string;
             };
             output: {
                 url: string;
@@ -31,7 +30,6 @@ declare const openRouter: _trpc_server.TRPCBuiltRouter<{
                 name: string;
                 path: string;
                 type: string;
-                appId: string;
             };
             output: {
                 id: string;

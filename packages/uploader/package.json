@@ -1,5 +1,5 @@
 {
-    "name": "@image-sass/preact-vue-connect",
+    "name": "@image-sass/uploader",
     "version": "0.0.1",
     "main": "dist/index.js",
     "type": "module",
@@ -10,11 +10,11 @@
         "dist"
     ],
     "dependencies": {
-        "preact": "^10.27.2",
-        "vue": "^3.5.27"
+        "@uppy/aws-s3": "^5.0.1",
+        "@uppy/core": "^5.0.2"
     },
     "peerDependencies": {
-        "preact": "^10.27.2",
-        "vue": "^3.5.27"
+        "@uppy/aws-s3": "^5.0.1",
+        "@uppy/core": "^5.0.2"
     }
 }

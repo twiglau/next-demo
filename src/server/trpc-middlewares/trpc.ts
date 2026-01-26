@@ -83,6 +83,7 @@ const withAppProcedure = withLoggerProcedure.use(async ({ ctx, next }) => {
         app: {
           with: {
             user: true,
+            storage: true,
           },
         },
       },
