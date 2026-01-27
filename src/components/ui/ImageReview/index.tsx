@@ -7,17 +7,20 @@ import { defaultIcons } from './common';
  * 它的核心作用是提供强大的图片预览和查看功能。
  */
 const ImageReview: React.FC<ImageProps> = (props) => {
-    let previewProps: ImagePreviewType|boolean;
+    let previewProps: ImagePreviewType | boolean;
 
-    if(typeof props.preview === 'boolean') {
+    if (typeof props.preview === 'boolean') {
         previewProps = props.preview;
-    }else {
+    } else {
         previewProps = {
-            ...defaultIcons,
-            ...props.preview?.icons
+            ...props.preview,
+            icons: {
+                ...defaultIcons,
+                ...props.preview?.icons,
+            }
         } as ImagePreviewType;
     }
-    return  <RcImage {...props} preview={previewProps} />
+    return <RcImage {...props} preview={previewProps} />
 }
 
 export default ImageReview;

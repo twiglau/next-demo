@@ -38,7 +38,7 @@ const FileItem: React.FC<FileItemProps> = (props) => {
                         zIndex: 999,
                         visible: preview,
                         imageRender(res: any) {
-                            const { props: imageProps } = res;
+                            const { props: { imgRef, ...imageProps } } = res;
                             return (
                                 <img 
                                 {...(imageProps as any)}

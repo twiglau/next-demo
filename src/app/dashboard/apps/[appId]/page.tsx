@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 import Dropzone from "@/components/feature/Dropzone";
 import { cn } from "@/lib/utils";
 import { FileList } from '@/components/feature/FileList';
+import UploadPreview from "@/components/feature/UploadPreview";
 
 
 interface AppPageProps {
@@ -74,7 +75,7 @@ export default function AppPage(props: AppPageProps) {
         )
     } else if(currentApp == null) {
         children = (
-            <div className="flex flex-col mt-10 p-4 border rounded-md max-w-48 mx-auto items-center">
+            <div className="size-[50vh] flex flex-col mt-10 p-4 border rounded-md mx-auto items-center">
                 <p className="text-lg">App not found</p>
                 <p className="text-sm">Choose another one</p>
                 <div className="flex flex-col gap-4 items-center">
@@ -138,6 +139,7 @@ export default function AppPage(props: AppPageProps) {
                                     )
                                 }}
                             </Dropzone>
+                            <UploadPreview uppy={uppy} />
                         </TabsContent>
                     </Tabs>
                 </div>

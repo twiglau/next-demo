@@ -1,10 +1,15 @@
 <template>
   <div>
-    <VueUploadButton :uploader="uploader" @file-uploaded="onFileUploaded">
+    <VueUploadButton
+      className="upload-button"
+      :uploader="uploader"
+      @file-uploaded="onFileUploaded"
+    >
       上传图片
     </VueUploadButton>
     <img :src="imageUrl" />
     <VueDropzone
+      className="dropzone"
       @dragging-change="onDraggingChanged"
       :uploader="uploader"
       @file-uploaded="onFileUploaded"
@@ -54,3 +59,45 @@ const dropzoneInnerClass = computed(() => {
   return dragging.value ? "dropzone-inner dragging" : "dropzone-inner";
 });
 </script>
+<style>
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.upload-button {
+  appearance: none;
+  padding: 8px;
+  border: 0;
+  border-radius: 4px;
+  background: #030303;
+  color: #efefef;
+  cursor: pointer;
+}
+
+.upload-button:hover {
+  background: #222222;
+  color: #efefef;
+}
+
+.dropzone {
+  border-style: dashed;
+  border-width: 2px;
+  width: 50vw;
+  height: 50vh;
+}
+
+.dropzone-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+}
+
+.dropzone-inner.dragging {
+  background: #e6abab;
+}
+</style>
