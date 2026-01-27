@@ -12,6 +12,7 @@ import {
 import { Avatar } from '@/components/ui/Avatar';
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
 import '../globals.css';
+import { Plan } from './Plan';
 
 
 export default async function RootLayout({ 
@@ -34,12 +35,15 @@ nav }: Readonly<{
                     <ThemeToggle />
                     <DropdownMenu>
                         <DropdownMenuTrigger>
-                            <Avatar>
-                                <AvatarImage src={session?.user?.image!} />
-                                <AvatarFallback>
-                                    {session?.user?.name?.substring(0, 2)}
-                                </AvatarFallback>
-                            </Avatar>
+                            <div className='relative'>
+                                <Avatar>
+                                    <AvatarImage src={session?.user?.image!} />
+                                    <AvatarFallback>
+                                        {session?.user?.name?.substring(0, 2)}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <Plan className='absolute top-0 text-xs -right-6 px-1 bg-green-500 rounded-full' />
+                            </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                             {session?.user?.name}

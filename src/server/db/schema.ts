@@ -24,6 +24,9 @@ export const apps = pgTable("apps", {
   storageId: integer("storage_id"),
 });
 
+export const userPlanEnum = ["free", "pro"] as const;
+export type UserPlan = (typeof userPlanEnum)[number];
+
 export const users = pgTable("user", {
   id: text("id")
     .primaryKey()
@@ -32,6 +35,8 @@ export const users = pgTable("user", {
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
+  plan: text("plan", { enum: userPlanEnum }).notNull().default("free"),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 export const usersRelation = relations(users, ({ many }) => ({

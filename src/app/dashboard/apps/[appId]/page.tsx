@@ -17,6 +17,7 @@ import { FileList } from '@/components/feature/FileList';
 import UploadPreview from "@/components/feature/UploadPreview";
 import { Dialog, DialogTitle, DialogContent } from "@/components/ui/Dialog";
 import { ImageUrlMaker } from "./ImageUrlMaker";
+import { UpgradeDialog } from "./Upgrade";
 
 
 interface AppPageProps {
@@ -34,6 +35,7 @@ export default function AppPage(props: AppPageProps) {
         refetchOnMount: false
     });
     const currentApp = apps?.find(app => app.id === appId);
+    const [showPlanDialog, setShowPlanDialog] = React.useState(false)
     
 
     const uppy = React.useMemo(() => {
@@ -41,13 +43,19 @@ export default function AppPage(props: AppPageProps) {
 
         uppy.use(AWS3, {
             shouldUseMultipart: false,
-            getUploadParameters: (file) => {
-                return trpcPureClient.file.createPresignedUrl.mutate({
-                    filename: file.data instanceof File ? file.data.name : '',
-                    contentType: file.data instanceof File ? file.data.type || '' : '',
-                    size: file.size || 0,
-                    appId
-                })
+            getUploadParameters: async (file) => {
+                try {
+                    const result = await trpcPureClient.file.createPresignedUrl.mutate({
+                        filename: file.data instanceof File ? file.data.name : '',
+                        contentType: file.data instanceof File ? file.data.type || '' : '',
+                        size: file.size || 0,
+                        appId
+                    })
+                    return result;
+                } catch (error) {
+                    setShowPlanDialog(true);
+                    throw error;
+                }
             }
         });
 
@@ -144,6 +152,7 @@ export default function AppPage(props: AppPageProps) {
                                 }}
                             </Dropzone>
                             <UploadPreview uppy={uppy} />
+                            <UpgradeDialog open={showPlanDialog} onOpenChange={setShowPlanDialog} />
                             <Dialog open={!!makingUrlImageId} onOpenChange={e => {
                                 if(!e) {
                                     setMakingUrlImageId(null);

@@ -10,7 +10,7 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuidv4 } from "uuid";
 import { files } from "../db/schema";
-import { and, asc, desc, eq, isNull, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, isNull, sql } from "drizzle-orm";
 import { filesCanOrderByColumn } from "../db/validate-schema";
 
 const filesOrderByColumnSchema = z
@@ -38,11 +38,23 @@ const fileOpenRoutes = router({
       const isoString = date.toISOString();
       const dateString = isoString.split("T")[0];
 
+      const user = ctx.user;
+      const isFreePlan = user.plan === "free";
       const app = ctx.app;
       if (!app || !app.storage) {
         throw new TRPCError({ code: "BAD_REQUEST" });
       }
-      if (app.userId !== ctx.user.id) {
+      if (app.userId !== user.id) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      const alreadyUploadedFilesCount = await db
+        .select({ count: count() })
+        .from(files)
+        .where(and(eq(files.appId, app.id), isNull(files.deletedAt)));
+
+      const countNum = alreadyUploadedFilesCount[0].count;
+      if (countNum >= 1 && isFreePlan) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 

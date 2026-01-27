@@ -33,8 +33,16 @@ const protectedProcedure = procedure
         code: "FORBIDDEN",
       });
     }
+
+    const user = await db.query.users.findFirst({
+      where: (users, { eq }) => eq(users.id, ctx.session!.user.id),
+      columns: {
+        plan: true,
+      },
+    });
+
     return next({
-      ctx: { session: ctx.session! },
+      ctx: { session: ctx.session!, plan: user?.plan },
     });
   });
 

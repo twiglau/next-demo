@@ -1,6 +1,7 @@
 import {
   AuthOptions,
   DefaultSession,
+  DefaultUser,
   getServerSession as nextAuthGetServerSession,
 } from "next-auth";
 import { db } from "@/server/db/db";
@@ -13,6 +14,10 @@ declare module "next-auth" {
     user: {
       id: string;
     } & DefaultSession["user"];
+  }
+
+  interface User extends DefaultUser {
+    id: string;
   }
 }
 
