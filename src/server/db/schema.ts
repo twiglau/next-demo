@@ -251,3 +251,23 @@ export const files_tagsRelations = relations(files_tags, ({ one }) => ({
     references: [tags.id],
   }),
 }));
+
+const OrderStatusEnum = ["created", "cancelled", "completed"] as const;
+
+export type OrderStatus = (typeof OrderStatusEnum)[number];
+
+export const orders = pgTable("orders", {
+  sessionId: varchar("session_id", { length: 255 }).primaryKey(),
+  userId: varchar("user_id", { length: 255 }).notNull(),
+  status: varchar("status", { enum: OrderStatusEnum })
+    .notNull()
+    .default("created"),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+});
+
+export const ordersRelations = relations(orders, ({ one }) => ({
+  user: one(users, {
+    fields: [orders.userId],
+    references: [users.id],
+  }),
+}));
