@@ -1,14 +1,37 @@
 'use client';
 
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/Accordion';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
 import { trpcClientReact } from '@/utils/api';
-import { Plus } from 'lucide-react';
-import React from 'react';
+import copy from 'copy-to-clipboard';
+import { Copy, Eye, Plus } from 'lucide-react';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
 
 interface Props {
     params: Promise<{ appId: string}>;
+}
+
+function KeyString(props: {id:number}) {
+    const { data: key } = trpcClientReact.apiKeys.requestKey.useQuery(props.id);
+
+    return (
+        <div className='flex justify-end items-center gap-2'>
+            <span>{ key }</span>
+            <Button
+             size='sm'
+             variant='ghost'
+             onClick={() => {
+                copy(key!);
+                toast('secret key copied!')
+             }}
+            >
+                <Copy />
+            </Button>
+        </div>
+    )
 }
 
 export default function ApiKeyPage(props: Props) {
@@ -29,6 +52,8 @@ export default function ApiKeyPage(props: Props) {
     const { data: apiKeys } = trpcClientReact.apiKeys.listApiKeys.useQuery({
         appId
     });
+
+    const [showKeyMap, setShowKeyMap] = useState<Record<number, boolean>>({})
 
     return (
         <div className='pt-10'>
@@ -54,15 +79,52 @@ export default function ApiKeyPage(props: Props) {
                     </PopoverContent>
                 </Popover>
             </div>
-            {apiKeys?.map(keys => (
-                <div 
-                key={keys.id}
-                className='border p-4 flex justify-between items-center m-4'
-                >
-                    <span>{keys.name}</span>
-                    <span>{keys.key}</span>
-                </div>
-            ))}
+            <Accordion type='single' collapsible>
+                {apiKeys?.map(keys => (
+                    <AccordionItem 
+                    key={keys.id}
+                    value={keys.id.toString()}
+                    >
+                        <AccordionTrigger>{keys.name}</AccordionTrigger>
+                        <AccordionContent>
+                            <div className='flex justify-between text-lg mb-4'>
+                                <span>Client Id</span>
+                                <div className='flex justify-end items-center gap-2'>
+                                    <span>{keys.clientId}</span>
+                                    <Button
+                                    size='sm'
+                                    variant='ghost'
+                                    onClick={() => {
+                                        copy(keys.clientId);
+                                        toast("client id copied!");
+                                    }}
+                                    >
+                                        <Copy />
+                                    </Button>
+                                </div>
+                            </div>
+                            <div className='flex justify-between text-lg mb-4'>
+                                <span>Secret Key</span>
+                                {!showKeyMap[keys.id] && (
+                                    <Button
+                                    onClick={() => {
+                                        setShowKeyMap((oldMap) => ({
+                                            ...oldMap,
+                                            [keys.id]: true
+                                        }))
+                                    }}
+                                    >
+                                        <Eye />
+                                    </Button>
+                                )}
+                                {showKeyMap[keys.id] && (
+                                    <KeyString id={keys.id} />
+                                )}
+                            </div>
+                        </AccordionContent>
+                    </AccordionItem>
+                ))}
+            </Accordion>
         </div>
     )
 }

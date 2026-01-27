@@ -34,16 +34,13 @@ const DeleteFileAction: React.FC<FileItemActionProps> = (props) => {
     )
 }
 
-const CopyUrlAction: React.FC<{url: string}> = (props) => {
-    const {url} = props;
+const CopyUrlAction: React.FC<{onClick: () => void}> = (props) => {
+    const {onClick} = props;
     return (
         <Button
             className="cursor-pointer"
             variant="ghost"
-            onClick={() => {
-                copyToClipboard(url);
-                toast('Copy Success!')
-            }}
+            onClick={onClick}
         >
             <Copy />
         </Button>

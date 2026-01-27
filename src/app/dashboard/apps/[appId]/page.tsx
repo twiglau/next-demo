@@ -15,6 +15,8 @@ import Dropzone from "@/components/feature/Dropzone";
 import { cn } from "@/lib/utils";
 import { FileList } from '@/components/feature/FileList';
 import UploadPreview from "@/components/feature/UploadPreview";
+import { Dialog, DialogTitle, DialogContent } from "@/components/ui/Dialog";
+import { ImageUrlMaker } from "./ImageUrlMaker";
 
 
 interface AppPageProps {
@@ -65,6 +67,8 @@ export default function AppPage(props: AppPageProps) {
         field: 'createdAt',
         order: 'desc'
     });
+
+    const [makingUrlImageId, setMakingUrlImageId] = React.useState<string | null>(null);
 
 
     let children: ReactNode;
@@ -134,12 +138,24 @@ export default function AppPage(props: AppPageProps) {
                                                     Drop File Here To Upload
                                                 </div>
                                             )}
-                                            <FileList appId={appId} orderBy={orderBy} uppy={uppy} />
+                                            <FileList appId={appId} orderBy={orderBy} uppy={uppy} onMakeUrl={setMakingUrlImageId} />
                                         </div>
                                     )
                                 }}
                             </Dropzone>
                             <UploadPreview uppy={uppy} />
+                            <Dialog open={!!makingUrlImageId} onOpenChange={e => {
+                                if(!e) {
+                                    setMakingUrlImageId(null);
+                                }
+                            }}>
+                                <DialogContent>
+                                    <DialogTitle>Make Image URL</DialogTitle>
+                                    {makingUrlImageId && (
+                                        <ImageUrlMaker id={makingUrlImageId} />
+                                    )}
+                                </DialogContent>
+                            </Dialog>
                         </TabsContent>
                     </Tabs>
                 </div>

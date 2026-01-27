@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/Button";
 import { trpcClientReact } from "@/utils/api";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/DropdownMenu";
 import Link from "next/link";
 import React  from "react"
 

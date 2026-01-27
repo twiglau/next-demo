@@ -16,13 +16,14 @@ interface FileListProps {
     uppy: Uppy;
     appId: string;
     orderBy: FilesOrderByColumn;
+    onMakeUrl:(id:string)=>void;
 }
 
 // TODO: inferRouterOutputs 是什么意思？
 type FileResult = inferRouterOutputs<AppRouter>['file']['infinityQueryFiles'];
 
 const FileList: React.FC<FileListProps> = (props) => {
-    const { uppy, appId, orderBy } = props;
+    const { uppy, appId, orderBy, onMakeUrl } = props;
     const query = {
         limit: 30,
         appId,
@@ -162,7 +163,7 @@ const FileList: React.FC<FileListProps> = (props) => {
                         <div
                         className="w-full h-full cursor-pointer absolute inset-0 bg-background/30 justify-center items-center flex opacity-0 hover:opacity-100 transition-opacity duration-200"
                         >
-                            <CopyUrlAction url={`${location.host}/image/${file.id}`} />
+                            <CopyUrlAction onClick={() => onMakeUrl(file.id)} />
                             <DeleteFileAction fileId={file.id} onDeleteSuccess={handlerFileDelete} />
                             <PreviewAction onClick={() => setPreview(true)} />
                         </div>

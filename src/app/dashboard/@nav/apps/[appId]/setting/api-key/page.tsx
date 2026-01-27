@@ -1,5 +1,11 @@
 'use client';
-
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/Breadcrumb"
 import AppDashboardNav from "../../page"
 
 type Props = {
@@ -7,9 +13,16 @@ type Props = {
 }
 export default function ApiKeySetting(props: Props) {
     return (
-        <div className="flex justify-between items-center">
-            <AppDashboardNav {...props} />
-            <div>{`/ api-key`}</div>
-        </div>
+        <Breadcrumb>
+            <BreadcrumbList>
+                <BreadcrumbItem>
+                    <AppDashboardNav {...props} />
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                <BreadcrumbPage>api-key</BreadcrumbPage>
+                </BreadcrumbItem>
+            </BreadcrumbList>
+        </Breadcrumb>
     );
 }

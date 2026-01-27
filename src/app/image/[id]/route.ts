@@ -9,10 +9,6 @@ const GET = async (
   { params }: { params: { id: string } },
 ) => {
   const { id } = params;
-  const { searchParams } = new URL(request.url);
-
-  const width = searchParams.get("_width");
-  const height = searchParams.get("_height");
   const file = await db.query.files.findFirst({
     where: (files, { eq }) => eq(files.id, id),
     with: {
@@ -63,12 +59,18 @@ const GET = async (
 
   const image = sharp(bytes);
 
+  const { searchParams } = new URL(request.url);
+
+  const width = searchParams.get("width");
+  const rotate = searchParams.get("rotate");
+
   image.resize({
     width: width ? parseInt(width) : 250,
-    height: height ? parseInt(height) : 250,
     fit: "inside",
     withoutEnlargement: true,
   });
+
+  image.rotate(rotate ? parseInt(rotate) : 0);
 
   const buffer = await image.webp().toBuffer();
   const uint8Array = new Uint8Array(buffer);
