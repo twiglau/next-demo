@@ -17,4 +17,4 @@ export function Plan(props: React.HTMLAttributes<HTMLSpanElement>) {
             {plan}
         </span>
     )
-}
+} 
